@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify
 import telebot
-import os
+from YOUR_TOKEN import YOUR_BOT_TOKEN
 
-YOUR_BOT_TOKEN = '7112295260:AAFpQ1Cqo31Odq-69t54stivkoJ21eTJkug'
 bot = telebot.TeleBot(YOUR_BOT_TOKEN)
 
 app = Flask(__name__)
+
+# Создаем словарь для хранения данных
+stored_messages = []
 
 @app.route('/send-message', methods=['POST'])
 def receive_message():
@@ -23,6 +25,33 @@ def receive_message():
     except Exception as e:
         print(f"Ошибка при получении данных: {e}")
         return jsonify({"status": "error", "message": "Internal server error"}), 500
+
+@app.route('/save-message', methods=['POST'])
+def save_message():
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        text = data.get('message')
+        chat_id = data.get('chatid')
+
+        if username and text and chat_id:
+            # Сохраняем данные в словарь
+            stored_messages.append({
+                'username': username,
+                'message': text,
+                'chatid': chat_id
+            })
+            return jsonify({"status": "success", "message": "Message saved"}), 200
+        else:
+            return jsonify({"status": "error", "message": "Invalid data provided"}), 400
+    except Exception as e:
+        print(f"Ошибка при сохранении данных: {e}")
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+
+# Опционально, страница для получения всех сохраненных сообщений
+@app.route('/get-messages', methods=['GET'])
+def get_messages():
+    return jsonify(stored_messages), 200
 
 if __name__ == '__main__':
     app.run()
