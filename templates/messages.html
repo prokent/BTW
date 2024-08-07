@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .message { margin-bottom: 10px; }
+        .username { font-weight: bold; }
+        .text { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Messages</h1>
+    <div id="messages">
+        {% for msg in messages %}
+            <div class="message">
+                <span class="username">{{ msg.username }}:</span>
+                <span class="text">{{ msg.message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
