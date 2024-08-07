@@ -16,7 +16,7 @@ def receive_message():
         chat_id = data.get('chatid')
 
         if chat_id and text:
-            bot.send_message(chat_id, f"Сообщение от сервера: {text}")
+            bot.send_message(chat_id, f"Дурак пишет: {text}")
             return jsonify({"status": "success"}), 200
         else:
             return jsonify({"status": "error", "message": "Invalid data provided"}), 400
