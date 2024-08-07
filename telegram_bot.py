@@ -3,7 +3,7 @@ import requests
 from YOUR_TOKEN import YOUR_BOT_TOKEN,FLASK_SERVER_URL
 
 bot = telebot.TeleBot(YOUR_BOT_TOKEN)
-# 13213
+
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     chat_id = message.chat.id
