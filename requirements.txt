@@ -14,4 +14,3 @@ requests==2.32.3
 sqlalchemy==2.0.22
 urllib3==2.2.2
 Werkzeug==3.0.3
-Flask[async]==2.2.5
