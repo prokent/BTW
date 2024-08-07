@@ -1,32 +1,55 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
+import telebot
+from YOUR_TOKEN import YOUR_BOT_TOKEN
 
+bot = telebot.TeleBot(YOUR_BOT_TOKEN)
 app = Flask(__name__)
 
-# Хранилище сообщений
-messages = []
-
+# Список для хранения сообщений
+stored_messages = []
 
 @app.route('/send-message', methods=['POST'])
-def send_message():
-    data = request.get_json()
+def receive_message():
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        text = data.get('message')
+        chat_id = data.get('chatid')
 
-    # Проверка наличия необходимых данных
-    if not data or 'username' not in data or 'message' not in data:
-        return jsonify({'msg': 'Username and message are required'}), 400
+        if chat_id and text:
+            bot.send_message(chat_id, f"Received: {text}")
+            return jsonify({"status": "success"}), 200
+        else:
+            return jsonify({"status": "error", "message": "Invalid data provided"}), 400
+    except Exception as e:
+        print(f"Error receiving data: {e}")
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
 
-    username = data['username']
-    message = data['message']
+@app.route('/save-message', methods=['POST'])
+def save_message():
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        text = data.get('message')
+        chat_id = data.get('chatid')
 
-    # Добавление сообщения в список
-    messages.append({'username': username, 'message': message})
+        if username and text and chat_id:
+            stored_messages.append({
+                'username': username,
+                'message': text,
+                'chatid': chat_id
+            })
+            print(f"Message saved: {stored_messages[-1]}")
+            return jsonify({"status": "success", "message": "Message saved"}), 200
+        else:
+            return jsonify({"status": "error", "message": "Invalid data provided"}), 400
+    except Exception as e:
+        print(f"Error saving data: {e}")
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
 
-    return jsonify({'msg': 'Message sent'}), 200
-
-
-@app.route('/view-messages')
-def view_messages():
-    return render_template('messages.html', messages=messages)
-
+@app.route('/get-messages', methods=['GET'])
+def get_messages():
+    return jsonify(stored_messages), 200
 
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(debug=True)
