@@ -17,12 +17,12 @@ def receive_message():
         chat_id = data.get('chatid')
 
         if chat_id and text:
-            bot.send_message(chat_id, f"Дурак пишет00: {text}")
+            bot.send_message(chat_id, f"Received: {text}")
             return jsonify({"status": "success"}), 200
         else:
             return jsonify({"status": "error", "message": "Invalid data provided"}), 400
     except Exception as e:
-        print(f"Ошибка при получении данных: {e}")
+        print(f"Error receiving data: {e}")
         return jsonify({"status": "error", "message": "Internal server error"}), 500
 
 @app.route('/save-message', methods=['POST'])
@@ -39,12 +39,12 @@ def save_message():
                 'message': text,
                 'chatid': chat_id
             })
-            print(f"Сообщение сохранено: {stored_messages[-1]}")
+            print(f"Message saved: {stored_messages[-1]}")
             return jsonify({"status": "success", "message": "Message saved"}), 200
         else:
             return jsonify({"status": "error", "message": "Invalid data provided"}), 400
     except Exception as e:
-        print(f"Ошибка при сохранении данных: {e}")
+        print(f"Error saving data: {e}")
         return jsonify({"status": "error", "message": "Internal server error"}), 500
 
 @app.route('/get-messages', methods=['GET'])
