@@ -11,6 +11,6 @@ MarkupSafe==2.1.5
 packaging==24.1
 pyTelegramBotAPI==4.22.0
 requests==2.32.3
-sqlalchemy==2.0.22
+SQLAlchemy==2.0.22
 urllib3==2.2.2
 Werkzeug==3.0.3
