@@ -12,16 +12,13 @@ app = Flask(__name__)
 # Включаем CORS для всего приложения
 CORS(app)
 
-@app.route('/send-message', methods=['POST'])
+@app.route('/send-message', methods=['GET'])
 def receive_message():
     try:
-        # Получаем JSON данные из запроса
-        data = request.get_json()
-
-        # Извлекаем необходимые данные
-        username = data.get('username')
-        text = data.get('message')
-        chat_id = data.get('chatid')
+        # Получаем данные из строки запроса (query parameters)
+        username = request.args.get('username')
+        text = request.args.get('message')
+        chat_id = request.args.get('chatid')
 
         # Проверяем наличие chat_id и текста сообщения
         if chat_id and text:
@@ -34,6 +31,7 @@ def receive_message():
         # Логируем ошибку и возвращаем статус 500
         print(f"Ошибка при получении данных: {e}")
         return jsonify({"status": "error", "message": "Internal server error"}), 500
+
 
 # Запускаем приложение
 if __name__ == '__main__':
